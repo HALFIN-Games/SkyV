@@ -2,5 +2,6 @@ testing-kits/**/client/
 testing-kits/**/*.zip
 testing-kits/**/*.7z
 testing-kits/**/*.rar
+testing-kits/**/*.sha256
 testing-kits/**/.DS_Store
 
