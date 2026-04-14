@@ -18,8 +18,29 @@ function Require-Command([string]$name) {
   }
 }
 
+function Resolve-GhExe() {
+  $cmd = Get-Command gh -ErrorAction SilentlyContinue
+  if ($cmd) {
+    return $cmd.Source
+  }
+
+  $candidates = @(
+    'C:\\Program Files\\GitHub CLI\\gh.exe',
+    'C:\\Program Files (x86)\\GitHub CLI\\gh.exe'
+  )
+
+  foreach ($p in $candidates) {
+    if (Test-Path $p) {
+      return $p
+    }
+  }
+
+  throw "Required command not found: gh (install GitHub CLI)"
+}
+
 Require-Command git
-Require-Command gh
+
+$ghExe = Resolve-GhExe
 
 $repoRoot = (git rev-parse --show-toplevel).Trim()
 $kitPath = $KitFolder
@@ -61,19 +82,18 @@ $notes = @(
 
 $releaseExists = $true
 try {
-  gh release view $Tag --repo . | Out-Null
+  & $ghExe release view $Tag --repo . | Out-Null
 } catch {
   $releaseExists = $false
 }
 
 if (-not $releaseExists) {
-  gh release create $Tag $zipPath $shaPath --repo . --title $Title --notes $notes
+  & $ghExe release create $Tag $zipPath $shaPath --repo . --title $Title --notes $notes
 } else {
-  gh release edit $Tag --repo . --title $Title --notes $notes | Out-Null
-  gh release upload $Tag $zipPath $shaPath --repo . --clobber | Out-Null
+  & $ghExe release edit $Tag --repo . --title $Title --notes $notes | Out-Null
+  & $ghExe release upload $Tag $zipPath $shaPath --repo . --clobber | Out-Null
 }
 
 Write-Host "Published release $Tag with assets:" 
 Write-Host "- $zipPath"
 Write-Host "- $shaPath"
-
