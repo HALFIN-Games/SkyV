@@ -1,0 +1,6 @@
+testing-kits/**/client/
+testing-kits/**/*.zip
+testing-kits/**/*.7z
+testing-kits/**/*.rar
+testing-kits/**/.DS_Store
+
