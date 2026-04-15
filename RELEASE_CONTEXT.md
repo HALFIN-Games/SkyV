@@ -31,6 +31,8 @@ Those are published as GitHub Release assets.
   - Adds a RaceMenu loading overlay and full strip before equipping rags.
 - `v7_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-loadingoverlay-logo`
   - Includes `skyv-loading-logo.svg` for the overlay.
+- `v8_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-loadingoverlay-logo-progress`
+  - Fixes overlay progress/hide stability; known issue: logo may not render on some setups.
 
 ## How to publish a kit
 

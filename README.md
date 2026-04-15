@@ -1,4 +1,4 @@
-﻿# SkyV
+# SkyV
 
 This repository is the staging ground for the future SkyV loader.
 
@@ -7,3 +7,5 @@ For now, it hosts the versioned tester kit packaging/release workflow under `tes
 Release notes/context: `RELEASE_CONTEXT.md`.
 
 How to publish a kit: `docs/RELEASING_TEST_KITS.md`.
+
+What we’re building next: `NEXT_PLAN.md`.
