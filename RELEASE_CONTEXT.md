@@ -29,6 +29,8 @@ Those are published as GitHub Release assets.
   - Fixes hook loading by using global `skyrimPlatform`.
 - `v6_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-loadingoverlay`
   - Adds a RaceMenu loading overlay and full strip before equipping rags.
+- `v7_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-loadingoverlay-logo`
+  - Includes `skyv-loading-logo.svg` for the overlay.
 
 ## How to publish a kit
 
