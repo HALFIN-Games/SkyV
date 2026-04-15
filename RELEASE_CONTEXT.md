@@ -25,6 +25,8 @@ Those are published as GitHub Release assets.
   - Ensures `skymp5-client.js` auto-loads `skyv-client-hooks.js`.
 - `v4_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-stronger`
   - Autoload + keeps re-equipping while RaceMenu is open.
+- `v5_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-fixed-sp`
+  - Fixes hook loading by using global `skyrimPlatform`.
 
 ## How to publish a kit
 
