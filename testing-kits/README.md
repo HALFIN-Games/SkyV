@@ -11,7 +11,7 @@ Create a new version folder per baseline, for example:
 
 Latest:
 
-- `testing-kits\v5_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-fixed-sp`
+- `testing-kits\v6_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-loadingoverlay`
 
 Each version folder should contain:
 
