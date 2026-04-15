@@ -9,6 +9,10 @@ Create a new version folder per baseline, for example:
 
 - `testing-kits\v1_skyrim-1.6.1170_skse-2.2.6_skymp-aa22bf2d`
 
+Latest:
+
+- `testing-kits\v3_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-autoload`
+
 Each version folder should contain:
 
 - `client\Data\` (SkyMP client payload)

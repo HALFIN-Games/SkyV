@@ -21,6 +21,8 @@ Those are published as GitHub Release assets.
 - `v1_skyrim-1.6.1170_skse-2.2.6_skymp-aa22bf2d`
 - `v2_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks`
   - Adds `Data\\Platform\\Plugins\\skyv-client-hooks.js` to force starter outfit visuals during/after RaceMenu.
+- `v3_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-autoload`
+  - Ensures `skymp5-client.js` auto-loads `skyv-client-hooks.js`.
 
 ## How to publish a kit
 
@@ -33,4 +35,3 @@ See `docs/RELEASING_TEST_KITS.md`.
 - Ensure any extra SkyV plugins are present in `client\\Data\\Platform\\Plugins\\`.
 - Update the kit `README.md` (baseline, server connect instructions, and what changed).
 - Zip + checksum + publish as a Release.
-
