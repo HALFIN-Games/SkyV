@@ -23,6 +23,8 @@ Those are published as GitHub Release assets.
   - Adds `Data\\Platform\\Plugins\\skyv-client-hooks.js` to force starter outfit visuals during/after RaceMenu.
 - `v3_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-autoload`
   - Ensures `skymp5-client.js` auto-loads `skyv-client-hooks.js`.
+- `v4_skyrim-1.6.1170_skse-2.2.6_skymp-skyv-clienthooks-stronger`
+  - Autoload + keeps re-equipping while RaceMenu is open.
 
 ## How to publish a kit
 
