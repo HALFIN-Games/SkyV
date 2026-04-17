@@ -1,0 +1,129 @@
+<Window x:Class="SkyV.Installer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SkyV.Installer"
+        mc:Ignorable="d"
+        Title="Vokun WL Installer" Height="560" Width="920"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                CornerRadius="18"
+                BorderBrush="{StaticResource SkyV.BorderBrush}"
+                BorderThickness="1"
+                Background="{StaticResource SkyV.SurfaceBrush}"
+                Padding="18">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
+                    <TextBlock Text="Vokun WL" FontSize="26" FontWeight="Bold" />
+                    <TextBlock Text="Installer (testers)" Foreground="{StaticResource SkyV.MutedBrush}" Margin="0,6,0,0" />
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SkyV.SecondaryButton}" Content="Copy logs" Margin="0,0,10,0" Click="OnCopyLogsClicked" />
+                    <Button Style="{StaticResource SkyV.SecondaryButton}" Content="Close" Click="OnCloseClicked" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="1"
+                Margin="0,18,0,0"
+                CornerRadius="18"
+                BorderBrush="{StaticResource SkyV.BorderBrush}"
+                BorderThickness="1"
+                Background="{StaticResource SkyV.Surface2Brush}"
+                Padding="22">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="{Binding TitleText}"
+                           FontSize="30"
+                           FontWeight="Bold" />
+
+                <TextBlock Grid.Row="1"
+                           Text="{Binding BodyText}"
+                           Foreground="{StaticResource SkyV.MutedBrush}"
+                           FontSize="15"
+                           Margin="0,10,0,0"
+                           TextWrapping="Wrap" />
+
+                <Border Grid.Row="2"
+                        Margin="0,18,0,0"
+                        CornerRadius="14"
+                        BorderBrush="{StaticResource SkyV.BorderBrush}"
+                        BorderThickness="1"
+                        Background="{StaticResource SkyV.SurfaceBrush}"
+                        Padding="16">
+                    <StackPanel>
+                        <TextBlock Text="Downloads" FontSize="16" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding DownloadSummary}" Foreground="{StaticResource SkyV.MutedBrush}" Margin="0,8,0,0" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="3"
+                        Margin="0,18,0,0"
+                        CornerRadius="14"
+                        BorderBrush="{StaticResource SkyV.BorderBrush}"
+                        BorderThickness="1"
+                        Background="{StaticResource SkyV.SurfaceBrush}"
+                        Padding="16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <ProgressBar Grid.Row="0"
+                                     Height="14"
+                                     Minimum="0"
+                                     Maximum="100"
+                                     Value="{Binding ProgressValue}"
+                                     IsIndeterminate="{Binding IsIndeterminate}" />
+
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding StatusText}"
+                                   Foreground="{StaticResource SkyV.MutedBrush}"
+                                   Margin="0,10,0,0"
+                                   TextWrapping="Wrap" />
+
+                        <TextBox Grid.Row="2"
+                                 Margin="0,12,0,0"
+                                 Style="{StaticResource SkyV.Input}"
+                                 Text="{Binding LogText}"
+                                 IsReadOnly="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 TextWrapping="Wrap" />
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,18,0,0">
+                    <Button Style="{StaticResource SkyV.PrimaryButton}"
+                            Content="{Binding PrimaryButtonText}"
+                            Width="220"
+                            IsEnabled="{Binding IsPrimaryEnabled}"
+                            Click="OnPrimaryClicked" />
+                    <Button Style="{StaticResource SkyV.SecondaryButton}"
+                            Content="Open GitHub release"
+                            Width="200"
+                            Margin="12,0,0,0"
+                            IsEnabled="{Binding IsNotBusy}"
+                            Click="OnOpenReleaseClicked" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

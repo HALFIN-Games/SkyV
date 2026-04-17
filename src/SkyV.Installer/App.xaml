@@ -1,0 +1,57 @@
+<Application x:Class="SkyV.Installer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SkyV.Installer">
+    <Application.Resources>
+        <Color x:Key="SkyV.Background">#1A1D1C</Color>
+        <Color x:Key="SkyV.Foreground">#F4F1EA</Color>
+        <Color x:Key="SkyV.Brand">#0C2D24</Color>
+        <Color x:Key="SkyV.Surface">#101312</Color>
+        <Color x:Key="SkyV.Surface2">#141817</Color>
+        <Color x:Key="SkyV.Muted">#A6B0AC</Color>
+        <Color x:Key="SkyV.Border">#2B3330</Color>
+
+        <SolidColorBrush x:Key="SkyV.BackgroundBrush" Color="{StaticResource SkyV.Background}" />
+        <SolidColorBrush x:Key="SkyV.ForegroundBrush" Color="{StaticResource SkyV.Foreground}" />
+        <SolidColorBrush x:Key="SkyV.BrandBrush" Color="{StaticResource SkyV.Brand}" />
+        <SolidColorBrush x:Key="SkyV.SurfaceBrush" Color="{StaticResource SkyV.Surface}" />
+        <SolidColorBrush x:Key="SkyV.Surface2Brush" Color="{StaticResource SkyV.Surface2}" />
+        <SolidColorBrush x:Key="SkyV.MutedBrush" Color="{StaticResource SkyV.Muted}" />
+        <SolidColorBrush x:Key="SkyV.BorderBrush" Color="{StaticResource SkyV.Border}" />
+
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="{StaticResource SkyV.BackgroundBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource SkyV.ForegroundBrush}" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style x:Key="SkyV.PrimaryButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource SkyV.BrandBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource SkyV.ForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SkyV.BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style x:Key="SkyV.SecondaryButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource SkyV.Surface2Brush}" />
+            <Setter Property="Foreground" Value="{StaticResource SkyV.ForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SkyV.BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style x:Key="SkyV.Input" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{StaticResource SkyV.SurfaceBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource SkyV.ForegroundBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SkyV.BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,8" />
+        </Style>
+    </Application.Resources>
+</Application>

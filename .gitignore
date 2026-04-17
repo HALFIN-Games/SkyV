@@ -1,7 +1,20 @@
-testing-kits/**/client/
-testing-kits/**/*.zip
-testing-kits/**/*.7z
-testing-kits/**/*.rar
-testing-kits/**/*.sha256
-testing-kits/**/.DS_Store
+legacy/testing-kits/**/client/
+legacy/testing-kits/**/*.zip
+legacy/testing-kits/**/*.7z
+legacy/testing-kits/**/*.rar
+legacy/testing-kits/**/*.sha256
+legacy/testing-kits/**/.DS_Store
 
+artifacts/
+*.msix
+*.appx
+*.cer
+*.pfx
+
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
