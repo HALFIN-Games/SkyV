@@ -31,7 +31,10 @@ public sealed class VokunPackInstaller
         Directory.CreateDirectory(cacheDir);
 
         var zipPath = Path.Combine(cacheDir, "VokunPack.zip");
-        await DownloadValidatedZipAsync(packUrl, zipPath, ct);
+        if (!TryValidateExistingZip(zipPath))
+        {
+            await DownloadValidatedZipAsync(packUrl, zipPath, ct);
+        }
 
         var extractDir = Path.Combine(cacheDir, "extract");
         if (Directory.Exists(extractDir)) Directory.Delete(extractDir, true);
@@ -62,6 +65,10 @@ public sealed class VokunPackInstaller
         using var req = new HttpRequestMessage(HttpMethod.Get, url);
         req.Headers.TryAddWithoutValidation("User-Agent", "SkyV.Launcher");
         req.Headers.TryAddWithoutValidation("Accept", "application/octet-stream");
+        req.Headers.TryAddWithoutValidation("Cache-Control", "no-cache");
+        req.Headers.TryAddWithoutValidation("Pragma", "no-cache");
+        req.Headers.ConnectionClose = true;
+        req.Version = System.Net.HttpVersion.Version11;
 
         using var resp = await http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
@@ -89,13 +96,13 @@ public sealed class VokunPackInstaller
     private async Task DownloadValidatedZipAsync(string url, string zipPath, CancellationToken ct)
     {
         Exception? last = null;
-        for (var attempt = 1; attempt <= 3; attempt++)
+        for (var attempt = 1; attempt <= 5; attempt++)
         {
             var tmp = zipPath + ".download";
             try
             {
                 if (File.Exists(tmp)) File.Delete(tmp);
-                await DownloadAsync(url, tmp, ct);
+                await DownloadAsync(AddCacheBuster(url), tmp, ct);
                 ValidateZipFile(tmp);
 
                 if (File.Exists(zipPath)) File.Delete(zipPath);
@@ -116,6 +123,33 @@ public sealed class VokunPackInstaller
         }
 
         throw new Exception($"Failed to download a valid pack zip after multiple attempts: {last?.Message}", last);
+    }
+
+    private static bool TryValidateExistingZip(string zipPath)
+    {
+        try
+        {
+            if (!File.Exists(zipPath)) return false;
+            ValidateZipFile(zipPath);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string AddCacheBuster(string url)
+    {
+        try
+        {
+            var sep = url.Contains('?') ? "&" : "?";
+            return url + sep + "nocache=" + Guid.NewGuid().ToString("N");
+        }
+        catch
+        {
+            return url;
+        }
     }
 
     private static void ValidateZipFile(string path)

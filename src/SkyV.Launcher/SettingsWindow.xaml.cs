@@ -83,9 +83,11 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
         try
         {
             StatusText = $"Testing: {baseUrl}{path}";
-            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             var url = baseUrl.TrimEnd('/') + path;
-            var resp = await http.GetAsync(url);
+            using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
+            using var req = new HttpRequestMessage(url.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ? HttpMethod.Head : HttpMethod.Get, url);
+            req.Headers.TryAddWithoutValidation("User-Agent", "SkyV.Launcher");
+            using var resp = await http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead);
             StatusText = $"OK ({(int)resp.StatusCode})\n{url}";
         }
         catch (Exception ex)
