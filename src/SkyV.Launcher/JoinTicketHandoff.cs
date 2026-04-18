@@ -15,23 +15,15 @@ public static class JoinTicketHandoff
         var dir = Path.Combine(skyrimRoot, "Data", "Platform", "PluginsNoLoad");
         Directory.CreateDirectory(dir);
 
-        var payload = new Payload
+        var payload = new
         {
-            Ticket = ticket,
-            ServerId = serverId,
-            CreatedAtUtc = DateTime.UtcNow,
+            ticket,
+            serverId,
+            createdAtUtc = DateTime.UtcNow,
         };
 
         var content = "//" + JsonSerializer.Serialize(payload);
         var path = Path.Combine(dir, "skyv-join-ticket-no-load.js");
         File.WriteAllText(path, content);
     }
-
-    private sealed class Payload
-    {
-        public string Ticket { get; set; } = "";
-        public string ServerId { get; set; } = "";
-        public DateTime CreatedAtUtc { get; set; }
-    }
 }
-
