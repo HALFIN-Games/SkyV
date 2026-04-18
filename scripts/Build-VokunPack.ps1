@@ -46,7 +46,10 @@ $settingsJson = @"
   "skyv-join-ui": true
 }
 "@
-Set-Content -Encoding utf8 $settingsPath $settingsJson
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($settingsPath, $settingsJson, $utf8NoBom)
+
+New-Item -ItemType Directory -Force -Path (Join-Path $dataOut "Platform\PluginsDev") | Out-Null
 
 $zipVersioned = Join-Path $OutputDir ("VokunPack_{0}.zip" -f $Version)
 if (Test-Path $zipVersioned) { Remove-Item -Force $zipVersioned }
