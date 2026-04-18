@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -30,7 +31,7 @@ public sealed class VokunPackInstaller
         Directory.CreateDirectory(cacheDir);
 
         var zipPath = Path.Combine(cacheDir, "VokunPack.zip");
-        await DownloadAsync(packUrl, zipPath, ct);
+        await DownloadValidatedZipAsync(packUrl, zipPath, ct);
 
         var extractDir = Path.Combine(cacheDir, "extract");
         if (Directory.Exists(extractDir)) Directory.Delete(extractDir, true);
@@ -64,6 +65,58 @@ public sealed class VokunPackInstaller
         await using var input = await resp.Content.ReadAsStreamAsync(ct);
         await using var output = new FileStream(outPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await input.CopyToAsync(output, ct);
+    }
+
+    private async Task DownloadValidatedZipAsync(string url, string zipPath, CancellationToken ct)
+    {
+        Exception? last = null;
+        for (var attempt = 1; attempt <= 3; attempt++)
+        {
+            var tmp = zipPath + ".download";
+            try
+            {
+                if (File.Exists(tmp)) File.Delete(tmp);
+                await DownloadAsync(url, tmp, ct);
+                ValidateZipFile(tmp);
+
+                if (File.Exists(zipPath)) File.Delete(zipPath);
+                File.Move(tmp, zipPath);
+                return;
+            }
+            catch (Exception ex)
+            {
+                last = ex;
+                try
+                {
+                    if (File.Exists(tmp)) File.Delete(tmp);
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        throw new Exception($"Failed to download a valid pack zip after multiple attempts: {last?.Message}", last);
+    }
+
+    private static void ValidateZipFile(string path)
+    {
+        if (!File.Exists(path)) throw new FileNotFoundException("Pack zip not found after download", path);
+
+        using (var fs = File.OpenRead(path))
+        {
+            var sig = new byte[4];
+            if (fs.Read(sig, 0, 4) < 4 || sig[0] != 0x50 || sig[1] != 0x4B)
+            {
+                throw new Exception("Downloaded file is not a ZIP archive.");
+            }
+        }
+
+        using var archive = ZipFile.OpenRead(path);
+        var hasData = archive.Entries.Any(e =>
+            e.FullName.StartsWith("Data/", StringComparison.OrdinalIgnoreCase) ||
+            e.FullName.StartsWith("Data\\", StringComparison.OrdinalIgnoreCase));
+        if (!hasData) throw new Exception("Downloaded zip does not contain a Data folder.");
     }
 
     private static void CopyDirectory(string sourceDir, string destDir, List<string> installed)
