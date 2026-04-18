@@ -26,7 +26,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private CancellationTokenSource? queueCts;
     private string? queueId;
     private string queueStatusNote = "";
-    private readonly HttpClient http = new() { Timeout = TimeSpan.FromMinutes(5) };
+    private readonly HttpClient http = new() { Timeout = TimeSpan.FromMinutes(20) };
 
     public MainWindow(JoinIntent? intent)
     {

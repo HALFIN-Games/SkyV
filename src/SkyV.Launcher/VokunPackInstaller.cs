@@ -59,12 +59,31 @@ public sealed class VokunPackInstaller
 
     private async Task DownloadAsync(string url, string outPath, CancellationToken ct)
     {
-        using var resp = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
+        using var req = new HttpRequestMessage(HttpMethod.Get, url);
+        req.Headers.TryAddWithoutValidation("User-Agent", "SkyV.Launcher");
+        req.Headers.TryAddWithoutValidation("Accept", "application/octet-stream");
+
+        using var resp = await http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
         resp.EnsureSuccessStatusCode();
 
+        var total = resp.Content.Headers.ContentLength;
+
         await using var input = await resp.Content.ReadAsStreamAsync(ct);
-        await using var output = new FileStream(outPath, FileMode.Create, FileAccess.Write, FileShare.None);
-        await input.CopyToAsync(output, ct);
+        await using var output = new FileStream(outPath, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 128, useAsync: true);
+
+        var buffer = new byte[1024 * 128];
+        long readTotal = 0;
+        int read;
+        while ((read = await input.ReadAsync(buffer.AsMemory(0, buffer.Length), ct)) > 0)
+        {
+            await output.WriteAsync(buffer.AsMemory(0, read), ct);
+            readTotal += read;
+        }
+
+        if (total.HasValue && total.Value > 0 && readTotal != total.Value)
+        {
+            throw new Exception($"Pack download incomplete. Expected {total.Value} bytes, got {readTotal} bytes.");
+        }
     }
 
     private async Task DownloadValidatedZipAsync(string url, string zipPath, CancellationToken ct)
