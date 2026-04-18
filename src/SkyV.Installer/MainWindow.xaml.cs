@@ -299,11 +299,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         var script =
             "$ErrorActionPreference = 'Stop'\n" +
             "$msix = $args[0]\n" +
+            "if (-not (Test-Path $msix)) { throw \"MSIX not found: $msix\" }\n" +
             "$existingUser = Get-AppxPackage -Name 'HALFIN.VokunWL' -ErrorAction SilentlyContinue\n" +
             "if ($existingUser) { Remove-AppxPackage -Package $existingUser.PackageFullName -ErrorAction SilentlyContinue | Out-Null }\n" +
             "$existingProv = Get-AppxProvisionedPackage -Online | Where-Object { $_.PackageName -like 'HALFIN.VokunWL_*' }\n" +
-            "foreach ($p in $existingProv) { Remove-AppxProvisionedPackage -Online -PackageName $p.PackageName | Out-Null }\n" +
-            "Add-AppxProvisionedPackage -Online -PackagePath $msix -SkipLicense | Out-Null\n" +
+            "foreach ($p in $existingProv) { try { Remove-AppxProvisionedPackage -Online -PackageName $p.PackageName -ErrorAction Stop | Out-Null } catch { } }\n" +
+            "$provisionOk = $true\n" +
+            "try { Add-AppxProvisionedPackage -Online -PackagePath $msix -SkipLicense -ErrorAction Stop | Out-Null } catch { $provisionOk = $false; Write-Output (\"Provisioning failed: \" + $_.Exception.Message) }\n" +
+            "if (-not $provisionOk) { Write-Output \"Continuing with per-user install.\" }\n" +
             "Add-AppxPackage -Path $msix -ForceApplicationShutdown | Out-Null\n";
         File.WriteAllText(ps1, script, new UTF8Encoding(false));
 
