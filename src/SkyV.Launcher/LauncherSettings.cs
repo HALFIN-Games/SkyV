@@ -14,7 +14,7 @@ public sealed class LauncherSettings
     public string QueueBaseUrl { get; set; } = "https://queue.vokunrp.com";
 
     [JsonPropertyName("pack_url")]
-    public string PackUrl { get; set; } = "https://github.com/HALFIN-Games/SkyV/releases/latest/download/VokunPack.zip";
+    public string PackUrl { get; set; } = "embedded";
 
     [JsonPropertyName("skyrim_install_path")]
     public string? SkyrimInstallPath { get; set; }

@@ -15,6 +15,7 @@ $packagingDir = Join-Path $repoRoot "src\SkyV.Launcher\Packaging"
 $assetsDir = Join-Path $packagingDir "Assets"
 $manifestPath = Join-Path $packagingDir "AppxManifest.xml"
 
+
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 New-Item -ItemType Directory -Force -Path $assetsDir | Out-Null
 
@@ -37,6 +38,9 @@ Write-Host "Copying assets..."
 Copy-Item -Force (Join-Path $assetsDir "*.png") $publishDir
 New-Item -ItemType Directory -Force -Path (Join-Path $publishDir "Assets") | Out-Null
 Copy-Item -Force (Join-Path $assetsDir "*.png") (Join-Path $publishDir "Assets")
+
+if (-not (Test-Path $packZip)) { throw "Pack zip not found: $packZip. Build pack first (Build-VokunPack.ps1)." }
+Copy-Item -Force $packZip (Join-Path $publishDir "VokunPack.zip")
 
 $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter makeappx.exe -ErrorAction SilentlyContinue |
   Where-Object { $_.FullName -match '\\x64\\makeappx\.exe$' } |

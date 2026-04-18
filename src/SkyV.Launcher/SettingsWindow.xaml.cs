@@ -84,6 +84,19 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
         {
             StatusText = $"Testing: {baseUrl}{path}";
             var url = baseUrl.TrimEnd('/') + path;
+
+            if (string.Equals(baseUrl, "embedded", StringComparison.OrdinalIgnoreCase))
+            {
+                StatusText = "OK (embedded)\nPack will be loaded from the installed app.";
+                return;
+            }
+
+            if (File.Exists(baseUrl))
+            {
+                StatusText = $"OK (file)\n{baseUrl}";
+                return;
+            }
+
             using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             using var req = new HttpRequestMessage(url.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ? HttpMethod.Head : HttpMethod.Get, url);
             req.Headers.TryAddWithoutValidation("User-Agent", "SkyV.Launcher");

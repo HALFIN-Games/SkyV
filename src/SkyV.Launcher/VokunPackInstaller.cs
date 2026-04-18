@@ -25,15 +25,38 @@ public sealed class VokunPackInstaller
         if (!Directory.Exists(skyrimRoot)) throw new Exception("Skyrim path does not exist.");
         if (!File.Exists(Path.Combine(skyrimRoot, "SkyrimSE.exe"))) throw new Exception("SkyrimSE.exe not found in the selected folder.");
 
-        if (string.IsNullOrWhiteSpace(packUrl)) throw new Exception("Pack URL is missing.");
+        packUrl ??= "";
 
         var cacheDir = GetCacheDir();
         Directory.CreateDirectory(cacheDir);
 
         var zipPath = Path.Combine(cacheDir, "VokunPack.zip");
-        if (!TryValidateExistingZip(zipPath))
+        var embeddedZip = TryResolveEmbeddedZipPath();
+        var localZip = TryResolveLocalZipPath(packUrl);
+
+        if (localZip is not null)
         {
-            await DownloadValidatedZipAsync(packUrl, zipPath, ct);
+            ValidateZipFile(localZip);
+            File.Copy(localZip, zipPath, true);
+        }
+        else if (string.IsNullOrWhiteSpace(packUrl) || string.Equals(packUrl, "embedded", StringComparison.OrdinalIgnoreCase))
+        {
+            if (embeddedZip is null) throw new Exception("Embedded pack is missing from the installation.");
+            ValidateZipFile(embeddedZip);
+            File.Copy(embeddedZip, zipPath, true);
+        }
+        else if (!TryValidateExistingZip(zipPath))
+        {
+            try
+            {
+                await DownloadValidatedZipAsync(packUrl, zipPath, ct);
+            }
+            catch
+            {
+                if (embeddedZip is null) throw;
+                ValidateZipFile(embeddedZip);
+                File.Copy(embeddedZip, zipPath, true);
+            }
         }
 
         var extractDir = Path.Combine(cacheDir, "extract");
@@ -136,6 +159,46 @@ public sealed class VokunPackInstaller
         catch
         {
             return false;
+        }
+    }
+
+    private static string? TryResolveLocalZipPath(string packUrl)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(packUrl)) return null;
+            if (packUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+            {
+                var uri = new Uri(packUrl);
+                var p = uri.LocalPath;
+                return File.Exists(p) ? p : null;
+            }
+
+            if (File.Exists(packUrl)) return packUrl;
+            if (Directory.Exists(packUrl))
+            {
+                var p = Path.Combine(packUrl, "VokunPack.zip");
+                return File.Exists(p) ? p : null;
+            }
+
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string? TryResolveEmbeddedZipPath()
+    {
+        try
+        {
+            var p = Path.Combine(AppContext.BaseDirectory, "VokunPack.zip");
+            return File.Exists(p) ? p : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
