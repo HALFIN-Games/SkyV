@@ -41,6 +41,9 @@ public sealed class VokunPackInstaller
         var srcDataDir = Path.Combine(extractDir, "Data");
         if (!Directory.Exists(srcDataDir)) throw new Exception("Pack is missing Data folder.");
 
+        TryDelete(Path.Combine(skyrimRoot, "Data", "Platform", "PluginsDev", "skymp5-client.js"));
+        TryDelete(Path.Combine(skyrimRoot, "Data", "Platform", "PluginsDev", "skymp5-client-settings.txt"));
+
         var installed = new List<string>();
         CopyDirectory(srcDataDir, Path.Combine(skyrimRoot, "Data"), installed);
 
@@ -81,6 +84,17 @@ public sealed class VokunPackInstaller
         }
     }
 
+    private static void TryDelete(string path)
+    {
+        try
+        {
+            if (File.Exists(path)) File.Delete(path);
+        }
+        catch
+        {
+        }
+    }
+
     private static string NormalizeRelative(string fullPath)
     {
         return fullPath.Replace('\\', '/');
@@ -105,4 +119,3 @@ public sealed class VokunPackInstaller
         public List<string> Files { get; set; } = new();
     }
 }
-
