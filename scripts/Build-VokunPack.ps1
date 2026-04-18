@@ -32,10 +32,11 @@ $dataOut = Join-Path $temp "Data"
 Copy-Item -Force -Recurse $SourceDataDir $dataOut
 
 $clientPlugin = Join-Path $SkympRepoDir "build\dist\client\Data\Platform\Plugins\skymp5-client.js"
-if (Test-Path $clientPlugin) {
-  $dst = Join-Path $dataOut "Platform\Plugins\skymp5-client.js"
-  Copy-Item -Force $clientPlugin $dst
+if (-not (Test-Path $clientPlugin)) {
+  throw "skymp5-client.js not found at: $clientPlugin. Build skymp-SkyV\\skymp5-client first (yarn build)."
 }
+$dst = Join-Path $dataOut "Platform\Plugins\skymp5-client.js"
+Copy-Item -Force $clientPlugin $dst
 
 $settingsPath = Join-Path $dataOut "Platform\Plugins\skymp5-client-settings.txt"
 $settingsJson = @"
