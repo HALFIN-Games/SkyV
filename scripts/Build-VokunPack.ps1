@@ -55,7 +55,20 @@ New-Item -ItemType Directory -Force -Path (Join-Path $dataOut "Platform\PluginsD
 $zipVersioned = Join-Path $OutputDir ("VokunPack_{0}.zip" -f $Version)
 if (Test-Path $zipVersioned) { Remove-Item -Force $zipVersioned }
 
-Compress-Archive -Path (Join-Path $temp "*") -DestinationPath $zipVersioned
+$zipTmp = "$zipVersioned.tmp"
+if (Test-Path $zipTmp) { Remove-Item -Force $zipTmp }
+
+Compress-Archive -Path (Join-Path $temp "*") -DestinationPath $zipTmp
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+try {
+  $z = [IO.Compression.ZipFile]::OpenRead($zipTmp)
+  $z.Dispose()
+} catch {
+  throw "Pack zip validation failed: $zipTmp ($($_.Exception.Message))"
+}
+
+Move-Item -Force $zipTmp $zipVersioned
 
 Write-Host "Done:"
 Write-Host $zipVersioned

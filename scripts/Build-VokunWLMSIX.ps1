@@ -41,7 +41,23 @@ New-Item -ItemType Directory -Force -Path (Join-Path $publishDir "Assets") | Out
 Copy-Item -Force (Join-Path $assetsDir "*.png") (Join-Path $publishDir "Assets")
 
 if (-not (Test-Path $packZip)) { throw "Pack zip not found: $packZip. Build pack first (Build-VokunPack.ps1)." }
-Copy-Item -Force $packZip (Join-Path $publishDir "VokunPack.zip")
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+try {
+  $z = [IO.Compression.ZipFile]::OpenRead($packZip)
+  $z.Dispose()
+} catch {
+  throw "Pack zip is invalid: $packZip ($($_.Exception.Message))"
+}
+
+$embeddedPack = Join-Path $publishDir "VokunPack.zip"
+Copy-Item -Force $packZip $embeddedPack
+
+try {
+  $z2 = [IO.Compression.ZipFile]::OpenRead($embeddedPack)
+  $z2.Dispose()
+} catch {
+  throw "Embedded pack zip is invalid after copy: $embeddedPack ($($_.Exception.Message))"
+}
 
 $makeappx = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Recurse -Filter makeappx.exe -ErrorAction SilentlyContinue |
   Where-Object { $_.FullName -match '\\x64\\makeappx\.exe$' } |
