@@ -14,6 +14,7 @@ $proj = Join-Path $repoRoot "src\SkyV.Launcher\SkyV.Launcher.csproj"
 $packagingDir = Join-Path $repoRoot "src\SkyV.Launcher\Packaging"
 $assetsDir = Join-Path $packagingDir "Assets"
 $manifestPath = Join-Path $packagingDir "AppxManifest.xml"
+$packZip = Join-Path $repoRoot ("artifacts\pack\VokunPack_{0}.zip" -f $Version)
 
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
